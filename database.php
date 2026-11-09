@@ -2,7 +2,7 @@
 $host = 'localhost';
 $db   = 'scholarship_system';
 $user = 'root';
-$pass = ''; // Change this if your MySQL root account has a password.
+$pass = ''; 
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
