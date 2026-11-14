@@ -6,6 +6,7 @@ require __DIR__ . '/../includes/functions.php';
 
 $id = (int)($_GET['id'] ?? 0);
 
+// Fetch scholarship details with its category name from the database
 $q = $pdo->prepare("
     SELECT s.*, c.category_name
     FROM scholarships s
@@ -14,10 +15,10 @@ $q = $pdo->prepare("
     WHERE s.scholarship_id = ?
     AND s.status = 'published'
 ");
-
+// Execute the query with the scholarship ID
 $q->execute([$id]);
 $s = $q->fetch();
-
+// If no scholarship found, show 404 error and stop
 if (!$s) {
     http_response_code(404);
     exit('Scholarship not found.');
