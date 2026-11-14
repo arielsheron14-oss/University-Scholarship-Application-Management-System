@@ -67,7 +67,7 @@ require __DIR__ . '/../includes/header.php';
     and
     <?= e($s['closing_date']) ?>
 </p>
-
+<!-- Allow eligible logged-in students to apply -->
 <?php if (
     is_logged_in() &&
     $_SESSION['role'] === 'student' &&
