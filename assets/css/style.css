@@ -114,3 +114,146 @@ th{background:#f3eefa;color:#513184}
 .zoom-control{color:#513184}
 .zoom-control input{accent-color:#6841a5}
 .crop-error{color:#b4234d}
+
+/* Royal Purple + Lavender theme */
+:root{
+  color:#30263d;
+  background:#fcfaff;
+  --ink:#30263d;
+  --muted:#796f86;
+  --primary:#6841a5;
+  --primary-dark:#39205f;
+  --accent:#a78bfa;
+  --surface:#ffffff;
+  --line:#e9e1f2;
+  --soft:#f3eefa;
+}
+
+body{
+  color:var(--ink);
+  background:#fcfaff;
+}
+
+.topbar{
+  background:#39205f;
+  box-shadow:0 3px 14px rgba(57,32,95,.16);
+}
+
+.topbar a:hover{ color:#d9c8ff; }
+.user{ color:#e9ddff; }
+.brand{ color:#fff; }
+
+.hero{
+  background:linear-gradient(125deg,#f0e8fb,#faf7ff);
+  border-color:#e5d8f5;
+}
+
+.hero h1,
+.staff-intro h1,
+.profile-heading h1{
+  color:#39205f;
+}
+
+.button, button{
+  background:#6841a5;
+  color:#fff;
+}
+
+.button:hover, button:hover{
+  background:#513184;
+}
+
+.button.secondary,
+.profile-actions .secondary{
+  background:#8b78a8;
+  color:#fff;
+}
+
+.card, .panel, .stat{
+  background:#fff;
+  border-color:#e9e1f2;
+  box-shadow:0 5px 18px rgba(57,32,95,.055);
+}
+
+.card h3,
+.existing-scholarships h2{
+  color:#513184;
+}
+
+.form{ background:#fff; }
+
+input, textarea, select{
+  border-color:#ded3eb;
+  background:#fff;
+  color:#30263d;
+}
+
+input:focus, textarea:focus, select:focus{
+  outline:2px solid #d5c4f4;
+  border-color:#8b65c5;
+}
+
+.alert{
+  background:#f0eafb;
+  color:#513184;
+}
+
+.alert.error{
+  background:#fbe9ee;
+  color:#923b59;
+}
+
+th{
+  background:#f3eefa;
+  color:#513184;
+}
+
+.footer{
+  background:#f3eefa;
+  color:#756687;
+}
+
+.eyebrow{ color:#8b65c5; }
+
+.scholarship-builder summary{
+  background:#f3eefa;
+  color:#513184;
+}
+
+.step-number{
+  background:#6841a5;
+  color:#fff;
+}
+
+.preview-card{
+  background:linear-gradient(155deg,#f3eefa,#fbf9ff);
+  border-color:#e5d8f5;
+}
+
+.preview-card h2{ color:#39205f; }
+.preview-provider{ color:#7954ad; }
+.preview-line strong{ color:#76658b; }
+.status-pill{
+  background:#f0eafb;
+  color:#6841a5;
+}
+
+.profile-nav a{ color:#513184; }
+.profile-nav a:hover{ background:#f3eefa; }
+.section-icon{
+  background:#f0eafb;
+  color:#6841a5;
+}
+
+.privacy-note{
+  background:#f7f3fc;
+  border-color:#e9e1f2;
+  border-left-color:#8b65c5;
+  color:#756687;
+}
+
+.account-dropdown a{ color:#513184; }
+.account-dropdown a:hover{
+  background:#f3eefa;
+  color:#39205f;
+}
