@@ -1,19 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('form').forEach(form => {
-    form.addEventListener('submit', event => {
-      if (!form.checkValidity()) {
-        event.preventDefault();
-        form.reportValidity();
-      }
-      
-document.addEventListener('DOMContentLoaded', () => {
   document.body.style.opacity = '0';
   document.body.style.transition = 'opacity 0.8s ease';
   setTimeout(() => {
     document.body.style.opacity = '1';
   }, 100);
 
-  
   const forms = document.querySelectorAll('form');
   forms.forEach(form => {
     form.addEventListener('submit', (e) => {
@@ -27,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  
   const inputs = document.querySelectorAll('input, select, textarea');
   inputs.forEach(input => {
     input.addEventListener('focus', () => {
@@ -41,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
- 
   const cards = document.querySelectorAll('.card, .scholarship-card, div');
   cards.forEach(card => {
     card.addEventListener('mouseenter', () => {
@@ -54,8 +43,15 @@ document.addEventListener('DOMContentLoaded', () => {
       card.style.boxShadow = '';
     });
   });
-});
 
+  // Date eka udin pennana eka
+  const today = new Date().toLocaleDateString('en-GB');
+  const dateBox = document.createElement('p');
+  dateBox.innerText = 'Today: ' + today;
+  dateBox.style.textAlign = 'center';
+  dateBox.style.color = '#666';
+  document.body.prepend(dateBox);
+});
 
 function showSuccessToast(message) {
   const toast = document.createElement('div');
@@ -74,8 +70,21 @@ function showSuccessToast(message) {
   `;
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 3000);
-}
-  
-    });
+
+   
+  setTimeout(() => {
+    showSuccessToast('Welcome to Scholarship Portal! 🎓');
+  }, 1000);
+
+
+  const topBtn = document.createElement('button');
+  topBtn.innerText = '↑ Top';
+  topBtn.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#4f46e5; color:white; border:none; padding:10px 15px; border-radius:50px; cursor:pointer; z-index:9999; display:none;';
+  document.body.appendChild(topBtn);
+  window.addEventListener('scroll', () => {
+    topBtn.style.display = window.scrollY > 300 ? 'block' : 'none';
   });
-});
+  topBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
