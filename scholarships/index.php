@@ -4,87 +4,76 @@
 require __DIR__ . '/../config/database.php';
 require __DIR__ . '/../includes/functions.php';
 
-$id = (int)($_GET['id'] ?? 0);
+$term = trim($_GET['q'] ?? '');
 
-// Fetch scholarship details with its category name from the database
-$q = $pdo->prepare("
-    SELECT s.*, c.category_name
-    FROM scholarships s
-    LEFT JOIN scholarship_categories c
-    ON c.category_id = s.category_id
-    WHERE s.scholarship_id = ?
-    AND s.status = 'published'
-");
-// Execute the query with the scholarship ID
-$q->execute([$id]);
-$s = $q->fetch();
-// If no scholarship found, show 404 error and stop
-if (!$s) {
-    http_response_code(404);
-    exit('Scholarship not found.');
+
+$sql = "SELECT s.*, c.category_name
+        FROM scholarships s
+        LEFT JOIN scholarship_categories c
+        ON c.category_id = s.category_id
+        WHERE s.status = 'published'
+        AND s.closing_date >= CURDATE()";
+
+$params = [];
+
+if ($term !== '') {
+    $sql .= " AND (s.title LIKE ? OR s.description LIKE ? OR c.category_name LIKE ?)";
+    $like = "%$term%";
+    $params = [$like, $like, $like];
 }
 
-$pageTitle = $s['title'];
+$sql .= " ORDER BY s.closing_date ASC";
 
+$q = $pdo->prepare($sql);
+$q->execute($params);
+$items = $q->fetchAll();
+
+$pageTitle = 'Scholarship Directory';
 require __DIR__ . '/../includes/header.php';
 
 ?>
 
-<h1><?= e($s['title']) ?></h1>
 
-<p>
-    <?= nl2br(e($s['description'])) ?>
-</p>
+<h1>Scholarship directory</h1>
 
-<p>
-    <strong>Provider:</strong>
-    <?= e($s['provider_name']) ?>
-</p>
+<form method="get" class="search">
+    <input name="q"
+           placeholder="Search by title or category"
+           value="<?= e($term) ?>">
+    <button>Search</button>
+</form>
 
-<p>
-    <strong>Benefits:</strong>
-    <?= nl2br(e($s['benefits'])) ?>
-</p>
+<div class="cards">
+    <?php foreach ($items as $s): ?>
+        <article class="card">
 
-<p>
-    <strong>Category:</strong>
-    <?= e($s['category_name'] ?? 'Other') ?>
-</p>
+            <h3><?= e($s['title']) ?></h3>
 
-<p>
-    <strong>Minimum GPA:</strong>
-    <?= e($s['min_gpa']) ?>
-</p>
+            <p>
+                <?= e(mb_strimwidth($s['description'], 0, 160, '...')) ?>
+            </p>
 
-<p>
-    <strong>Required documents:</strong>
-    <?= nl2br(e($s['required_documents'])) ?>
-</p>
+            <p>
+                Category: <?= e($s['category_name'] ?? 'Other') ?>
+                | Minimum GPA: <?= e($s['min_gpa']) ?>
+            </p>
 
-<p>
-    <strong>Apply between:</strong>
-    <?= e($s['opening_date']) ?>
-    and
-    <?= e($s['closing_date']) ?>
-</p>
-<!-- Allow eligible logged-in students to apply -->
-<?php if (
-    is_logged_in() &&
-    $_SESSION['role'] === 'student' &&
-    $s['closing_date'] >= date('Y-m-d')
-): ?>
+            <p>
+                Deadline: <?= e($s['closing_date']) ?>
+            </p>
 
-    <a class="button" href="../student/apply.php?id=<?= $id ?>">
-        Apply now
-    </a>
+            <a href="view.php?id=<?= (int)$s['scholarship_id'] ?>">
+                View details
+            </a>
 
-<?php elseif (!is_logged_in()): ?>
+        </article>
+    <?php endforeach; ?>
+</div>
 
-    <a class="button" href="../login.php">
-        Login to apply
-    </a>
-
+<?php if (!$items): ?>
+    <p>No matching open scholarships found.</p>
 <?php endif; ?>
+
 
 <?php require __DIR__ . '/../includes/footer.php'; ?>
 
