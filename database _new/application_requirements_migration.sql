@@ -1,6 +1,3 @@
--- Run once in phpMyAdmin after selecting the scholarship_system database.
--- Adds configurable scholarship document requirements and per-application uploads.
-
 ALTER TABLE applications
   ADD COLUMN profile_snapshot LONGTEXT NULL;
 
