@@ -65,7 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $financialCircumstances = trim($_POST['financial_circumstances'] ?? '');
     $financialAidRaw = (string)$financialAidRaw;
     $validIncomeRanges = ['', 'Below LKR 25,000', 'LKR 25,000–49,999', 'LKR 50,000–99,999', 'LKR 100,000–149,999', 'LKR 150,000–249,999', 'LKR 250,000 or above', 'Prefer not to say'];
-    $validEmployment = ['', 'Employed full-time', 'Employed part-time', 'Self-employed', 'Unemployed', 'Retired', 'Not applicable'];
     $removePhoto = isset($_POST['remove_picture']);
     $newPhoto = null;
 
@@ -75,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Please enter a valid email address.';
     } elseif (strlen($phone) > 30) {
         $error = 'Phone number must be 30 characters or fewer.';
-    } elseif ($dob !== '' && (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $dob) || $dob > date('Y-m-d'))) {
+    } elseif ($dob !== '' && (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $dob)) || $dob > date('Y-m-d'))) {
         $error = 'Please enter a valid date of birth that is not in the future.';
     } elseif ($role === 'student' && $studyYearRaw !== '' && (!ctype_digit($studyYearRaw) || (int)$studyYearRaw < 1 || (int)$studyYearRaw > 8)) {
         $error = 'Study year must be between 1 and 8.';
