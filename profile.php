@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Please enter a valid email address.';
     } elseif (strlen($phone) > 30) {
         $error = 'Phone number must be 30 characters or fewer.';
-    } elseif ($dob !== '' && (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $dob)) || $dob > date('Y-m-d'))) {
+   } elseif ($dob !== '' && (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $dob) || $dob > date('Y-m-d'))) {
         $error = 'Please enter a valid date of birth that is not in the future.';
     } elseif ($role === 'student' && $studyYearRaw !== '' && (!ctype_digit($studyYearRaw) || (int)$studyYearRaw < 1 || (int)$studyYearRaw > 8)) {
         $error = 'Study year must be between 1 and 8.';
