@@ -22,6 +22,6 @@ $pageTitle='Login'; require __DIR__.'/includes/header.php';
 <input type="hidden" name="csrf_token" value="<?=e(csrf_token())?>">
 <label>Email<input type="email" name="email" required></label>
 <label>Password<input type="password" name="password" required></label>
-<button>Login</button>
+<div class="login-actions"><button type="submit">Login</button><button type="reset" class="login-clear-button">Clear</button></div>
 </form>
 <?php require __DIR__.'/includes/footer.php'; ?>

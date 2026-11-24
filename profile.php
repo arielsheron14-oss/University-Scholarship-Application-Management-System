@@ -10,29 +10,6 @@ $stmt->execute([$id]);
 $profile = $stmt->fetch();
 if (!$profile) { http_response_code(404); exit('User profile not found.'); }
 $error = '';
-$validIncomeRanges = [
-    '',
-    'Below LKR 25,000',
-    'LKR 25,000–49,999',
-    'LKR 50,000–99,999',
-    'LKR 100,000–149,999',
-    'LKR 150,000–249,999',
-    'LKR 250,000 or above',
-    'Prefer not to say'
-];
-
-$validEmployment = [
-    '',
-    'Not employed',
-    'Employed full-time',
-    'Employed part-time',
-    'Self-employed',
-    'Casual / Temporary employment',
-    'Unemployed and seeking employment',
-    'Retired',
-    'Unable to work',
-    'Prefer not to say'
-];
 $incomeRange = $profile['household_income_range'] ?? '';
 $householdSizeRaw = $profile['household_size'] ?? '';
 $dependentsRaw = $profile['dependents_count'] ?? '';
@@ -40,6 +17,8 @@ $guardianOccupation = $profile['guardian_occupation'] ?? '';
 $employmentStatus = $profile['employment_status'] ?? '';
 $financialAidRaw = isset($profile['receives_financial_aid']) && $profile['receives_financial_aid'] !== null ? (string)(int)$profile['receives_financial_aid'] : '';
 $financialCircumstances = $profile['financial_circumstances'] ?? '';
+$validIncomeRanges = ['', 'Below LKR 25,000', 'LKR 25,000–49,999', 'LKR 50,000–99,999', 'LKR 100,000–149,999', 'LKR 150,000–249,999', 'LKR 250,000 or above', 'Prefer not to say'];
+$validEmployment = ['', 'Employed full-time', 'Employed part-time', 'Self-employed', 'Unemployed', 'Retired', 'Not applicable'];
 $uploadDir = __DIR__.'/uploads/profile_pictures';
 if (!is_dir($uploadDir)) { mkdir($uploadDir, 0755, true); }
 
@@ -64,7 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $financialAidRaw = $_POST['receives_financial_aid'] ?? '';
     $financialCircumstances = trim($_POST['financial_circumstances'] ?? '');
     $financialAidRaw = (string)$financialAidRaw;
-    $validIncomeRanges = ['', 'Below LKR 25,000', 'LKR 25,000–49,999', 'LKR 50,000–99,999', 'LKR 100,000–149,999', 'LKR 150,000–249,999', 'LKR 250,000 or above', 'Prefer not to say'];
     $removePhoto = isset($_POST['remove_picture']);
     $newPhoto = null;
 
@@ -74,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Please enter a valid email address.';
     } elseif (strlen($phone) > 30) {
         $error = 'Phone number must be 30 characters or fewer.';
-   } elseif ($dob !== '' && (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $dob) || $dob > date('Y-m-d'))) {
+    } elseif ($dob !== '' && (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $dob) || $dob > date('Y-m-d'))) {
         $error = 'Please enter a valid date of birth that is not in the future.';
     } elseif ($role === 'student' && $studyYearRaw !== '' && (!ctype_digit($studyYearRaw) || (int)$studyYearRaw < 1 || (int)$studyYearRaw > 8)) {
         $error = 'Study year must be between 1 and 8.';
@@ -210,7 +188,7 @@ $initial = strtoupper(substr(trim($profile['full_name']), 0, 1));
           <label>Financial dependents<input type="number" name="dependents_count" min="0" max="30" value="<?=e($dependentsRaw)?>" placeholder="e.g. 2"></label>
           <label>Parent / guardian occupation<input name="guardian_occupation" maxlength="150" value="<?=e($guardianOccupation)?>" placeholder="Optional"></label>
           <label>Employment status
-            <select name="employment_status"><option value="">Select status</option><?php foreach ($validEmployment as $status): if ($status === '') continue; ?><option value="<?=e($status)?>" <?=($employmentStatus === $status ? 'selected' : '')?>><?=e($status)?></option><?php endforeach; ?></select>
+            <select name="employment_status" id="employmentStatus" class="profile-select" required><option value="">Choose your employment status</option><?php foreach ($validEmployment as $status): if ($status === '') continue; ?><option value="<?=e($status)?>" <?=($employmentStatus === $status ? 'selected' : '')?>><?=e($status)?></option><?php endforeach; ?></select>
           </label>
           <label>Receiving financial assistance?
             <select name="receives_financial_aid"><option value="" <?=($financialAidRaw === '' ? 'selected' : '')?>>Prefer not to say</option><option value="1" <?=($financialAidRaw === '1' ? 'selected' : '')?>>Yes</option><option value="0" <?=($financialAidRaw === '0' ? 'selected' : '')?>>No</option></select>

@@ -1,0 +1,16 @@
+USE scholarship_system;
+ALTER TABLE applications ADD COLUMN profile_snapshot LONGTEXT NULL;
+CREATE TABLE IF NOT EXISTS scholarship_document_requirements (
+ requirement_id INT AUTO_INCREMENT PRIMARY KEY,scholarship_id INT NOT NULL,document_name VARCHAR(180) NOT NULL,description TEXT NULL,is_required TINYINT(1) NOT NULL DEFAULT 1,allowed_types VARCHAR(80) NOT NULL DEFAULT 'pdf',max_size_mb DECIMAL(4,1) NOT NULL DEFAULT 5.0,sort_order INT NOT NULL DEFAULT 0,is_active TINYINT(1) NOT NULL DEFAULT 1,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY(scholarship_id) REFERENCES scholarships(scholarship_id) ON DELETE CASCADE,INDEX idx_doc_req_scholarship(scholarship_id,is_active)
+) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS scholarship_questions (
+ question_id INT AUTO_INCREMENT PRIMARY KEY,scholarship_id INT NOT NULL,question_text VARCHAR(500) NOT NULL,help_text TEXT NULL,field_type ENUM('short_text','long_text','number','date','select') NOT NULL DEFAULT 'short_text',is_required TINYINT(1) NOT NULL DEFAULT 1,options_json TEXT NULL,sort_order INT NOT NULL DEFAULT 0,is_active TINYINT(1) NOT NULL DEFAULT 1,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY(scholarship_id) REFERENCES scholarships(scholarship_id) ON DELETE CASCADE,INDEX idx_questions_scholarship(scholarship_id,is_active)
+) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS application_answers (
+ answer_id INT AUTO_INCREMENT PRIMARY KEY,application_id INT NOT NULL,question_id INT NOT NULL,answer_text TEXT NOT NULL,question_text_snapshot VARCHAR(500) NULL,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,UNIQUE KEY unique_application_answer(application_id,question_id),FOREIGN KEY(application_id) REFERENCES applications(application_id) ON DELETE CASCADE,FOREIGN KEY(question_id) REFERENCES scholarship_questions(question_id) ON DELETE RESTRICT
+) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS application_documents (
+ document_id INT AUTO_INCREMENT PRIMARY KEY,application_id INT NOT NULL,requirement_id INT NOT NULL,original_name VARCHAR(255) NOT NULL,stored_name VARCHAR(100) NOT NULL UNIQUE,mime_type VARCHAR(100) NOT NULL,file_size BIGINT UNSIGNED NOT NULL,document_name_snapshot VARCHAR(180) NULL,review_status ENUM('Pending','Verified','Rejected') NOT NULL DEFAULT 'Pending',reviewer_note TEXT NULL,reviewed_by INT NULL,reviewed_at DATETIME NULL,uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,UNIQUE KEY unique_application_document(application_id,requirement_id),FOREIGN KEY(application_id) REFERENCES applications(application_id) ON DELETE CASCADE,FOREIGN KEY(requirement_id) REFERENCES scholarship_document_requirements(requirement_id) ON DELETE RESTRICT,FOREIGN KEY(reviewed_by) REFERENCES users(user_id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS application_status_history (history_id INT AUTO_INCREMENT PRIMARY KEY,application_id INT NOT NULL,old_status VARCHAR(30) NULL,new_status VARCHAR(30) NOT NULL,changed_by INT NOT NULL,review_note TEXT NULL,changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY(application_id) REFERENCES applications(application_id) ON DELETE CASCADE,FOREIGN KEY(changed_by) REFERENCES users(user_id),INDEX idx_status_history_app(application_id,changed_at)) ENGINE=InnoDB;

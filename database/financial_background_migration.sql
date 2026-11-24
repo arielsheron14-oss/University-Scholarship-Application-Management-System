@@ -1,3 +1,4 @@
+-- Run this ONCE in phpMyAdmin for an existing scholarship_system database.
 USE scholarship_system;
 ALTER TABLE student_profiles
   ADD COLUMN household_income_range VARCHAR(40) NULL AFTER achievements,

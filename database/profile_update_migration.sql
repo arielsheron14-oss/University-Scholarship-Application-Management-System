@@ -1,3 +1,4 @@
+-- Run this once in phpMyAdmin for an existing scholarship_system database.
 USE scholarship_system;
 ALTER TABLE users
   ADD COLUMN phone VARCHAR(30) NULL AFTER email,

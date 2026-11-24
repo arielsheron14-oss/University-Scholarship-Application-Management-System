@@ -33,6 +33,9 @@ $pageTitle='Register'; require __DIR__.'/includes/header.php';
 <label>Email<input type="email" name="email" required></label>
 <label>Student number<input name="student_number"></label>
 <label>Password (minimum 8 characters)<input type="password" name="password" minlength="8" required></label>
-<button>Register</button>
+<div class="register-actions">
+<button type="submit">Register</button>
+<button type="reset" class="clear-form-button">Clear</button>
+</div>
 </form>
 <?php require __DIR__.'/includes/footer.php'; ?>
